@@ -1,25 +1,38 @@
 const mongoose = require('mongoose');
 
-const storageUnitSchema = new mongoose.Schema(
+const bookingSchema = new mongoose.Schema(
 {
-    name: {
-        type: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
 
-    size: {
-        type: String,   // e.g. Small, Medium, Large
+    unitId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'StorageUnit',
         required: true
     },
 
-    pricePerDay: {
+    startDate: {
+        type: Date,
+        required: true
+    },
+
+    endDate: {
+        type: Date,
+        required: true
+    },
+
+    totalCost: {
         type: Number,
         required: true
     },
 
-    available: {
-        type: Boolean,
-        default: true
+    status: {
+        type: String,
+        enum: ["pending", "confirmed", "cancelled"],
+        default: "pending"
     }
 },
 {
@@ -27,4 +40,4 @@ const storageUnitSchema = new mongoose.Schema(
 }
 );
 
-module.exports = mongoose.model('StorageUnit', storageUnitSchema);
+module.exports = mongoose.models.Booking || mongoose.model('Booking', bookingSchema);

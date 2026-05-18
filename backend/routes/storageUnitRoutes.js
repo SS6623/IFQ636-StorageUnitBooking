@@ -1,10 +1,26 @@
-
-const express = require('express');
-const { getTasks, addTask, updateTask, deleteTask } = require('../controllers/taskController');
-const { protect } = require('../middleware/authMiddleware');
+const express = require("express");
 const router = express.Router();
 
-router.route('/').get(protect, getTasks).post(protect, addTask);
-router.route('/:id').put(protect, updateTask).delete(protect, deleteTask);
+const {
+  createUnit,
+  getUnits,
+  updateUnit,
+  deleteUnit
+} = require("../controllers/storageUnitController");
+
+const { protect, admin } = require("../middleware/authMiddleware");
+
+//  Get all units (public)
+router.get("/", getUnits);
+
+//  Create unit (admin only)
+router.post("/", protect, admin, createUnit);
+
+//  Update unit (admin only)
+router.put("/:id", protect, admin, updateUnit);
+
+//  Delete unit (admin only)
+router.delete("/:id", protect, admin, deleteUnit);
 
 module.exports = router;
+``

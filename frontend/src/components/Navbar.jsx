@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.jpg';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -11,51 +12,94 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <nav style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "10px 20px",
+      backgroundColor: "#1D4ED8",
+      color: "white"
+    }}>
       
-      {/* ✅ App Name */}
-      <Link to="/" className="text-2xl font-bold">
-        Storage Booking System
-      </Link>
+      {/* ✅ Logo + Title */}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img 
+          src={logo} 
+          alt="SS Storage Solutions logo" 
+          style={{ width: "50px", marginRight: "10px" }} 
+        />
+        <h2 style={{ margin: 0 }}>SS Storage Solutions</h2>
+      </div>
 
-      <div>
+      {/* ✅ Navigation + User Info */}
+      <div style={{ display: "flex", alignItems: "center" }}>
         {user ? (
           <>
-            {/* ✅ USER LINKS */}
-            <Link to="/" className="mr-4">Dashboard</Link>
-            <Link to="/my-bookings" className="mr-4">My Bookings</Link>
-            <Link to="/profile" className="mr-4">Profile</Link>
+            {/* ✅ User Name */}
+            <span
+              style={{
+                marginRight: "15px",
+                padding: "6px 10px",
+                background: "white",
+                color: "#1D4ED8",
+                borderRadius: "5px",
+                fontWeight: "bold"
+              }}
+            >
+              Welcome, {user.name}
+            </span>
 
-            {/* ✅ ADMIN LINKS */}
+            {/* ✅ Menu Links */}
+            <Link to="/" style={link}>Dashboard</Link>
+            <Link to="/my-bookings" style={link}>Bookings</Link>
+            <Link to="/profile" style={link}>Profile</Link>
+
+            {/* ✅ Admin Menu */}
             {user.role === "admin" && (
               <>
-                <Link to="/admin" className="mr-4">Admin Units</Link>
-                <Link to="/admin/bookings" className="mr-4">Admin Bookings</Link>
+                <Link to="/admin" style={link}>Manage Units</Link>
+                <Link to="/admin/bookings" style={link}>All Bookings</Link>
               </>
             )}
 
-            {/* ✅ LOGOUT */}
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-4 py-2 rounded hover:bg-red-700"
-            >
+            {/* ✅ Logout */}
+            <button onClick={handleLogout} style={logoutBtn}>
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="mr-4">Login</Link>
-            <Link
-              to="/register"
-              className="bg-green-500 px-4 py-2 rounded hover:bg-green-700"
-            >
-              Register
-            </Link>
+            <Link to="/login" style={link}>Login</Link>
+            <Link to="/register" style={registerBtn}>Register</Link>
           </>
         )}
       </div>
     </nav>
   );
+};
+
+const link = {
+  marginRight: "15px",
+  color: "white",
+  textDecoration: "none",
+  fontWeight: "500"
+};
+
+const logoutBtn = {
+  background: "#EF4444",
+  color: "white",
+  padding: "6px 12px",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer"
+};
+
+const registerBtn = {
+  background: "#10B981",
+  padding: "6px 12px",
+  borderRadius: "5px",
+  color: "white",
+  textDecoration: "none"
 };
 
 export default Navbar;

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function MyBookings() {
+const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [sortBy, setSortBy] = useState("date");
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const token = userInfo?.token;
@@ -13,10 +15,11 @@ export default function MyBookings() {
         const { data } = await axios.get(
           "http://localhost:5001/api/bookings/my",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
-
         setBookings(data);
       } catch (error) {
         console.error(error);
@@ -26,45 +29,90 @@ export default function MyBookings() {
     if (token) fetchBookings();
   }, [token]);
 
-  const handleCancel = async (id) => {
-    try {
-      await axios.put(
-        `http://localhost:5001/api/bookings/cancel/${id}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  // ✅ FILTER
+  let filteredBookings =
+    filterStatus === "all"
+      ? bookings
+      : bookings.filter((b) => b.status === filterStatus);
 
-      setBookings(
-        bookings.map((b) =>
-          b._id === id ? { ...b, status: "cancelled" } : b
-        )
-      );
-
-    } catch (error) {
-      alert("Cancel failed");
+  // ✅ SORT
+  filteredBookings = [...filteredBookings].sort((a, b) => {
+    if (sortBy === "date") {
+      return new Date(b.createdAt) - new Date(a.createdAt);
     }
-  };
+    if (sortBy === "cost") {
+      return b.totalCost - a.totalCost;
+    }
+    return 0;
+  });
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "30px" }}>
       <h2>My Bookings</h2>
 
-      {bookings.length === 0 && <p>No bookings found.</p>}
+      {/* ✅ FILTER + SORT */}
+      <div style={{ marginBottom: "15px" }}>
+        <label>Status: </label>
+        <select onChange={(e) => setFilterStatus(e.target.value)}>
+          <option value="all">All</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
 
-      {bookings.map((b) => (
-        <div key={b._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
-          <h3>{b.unitId?.name}</h3>
-          <p>Status: {b.status}</p>
+        <label style={{ marginLeft: "20px" }}>Sort by: </label>
+        <select onChange={(e) => setSortBy(e.target.value)}>
+          <option value="date">Date</option>
+          <option value="cost">Total Cost</option>
+        </select>
+      </div>
 
-          {b.status === "confirmed" && (
-            <button onClick={() => handleCancel(b._id)}>
-              Cancel
-            </button>
-          )}
-        </div>
-      ))}
+      {/* ✅ TABLE */}
+      <table style={table}>
+        <thead>
+          <tr style={thead}>
+            <th style={th}>Unit</th>
+            <th style={th}>Start Date</th>
+            <th style={th}>End Date</th>
+            <th style={th}>Status</th>
+            <th style={th}>Total Cost</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {filteredBookings.map((b) => (
+            <tr key={b._id}>
+              <td style={td}>{b.unitId?.name || "N/A"}</td>
+              <td style={td}>{new Date(b.startDate).toLocaleDateString()}</td>
+              <td style={td}>{new Date(b.endDate).toLocaleDateString()}</td>
+              <td style={td}>{b.status}</td>
+              <td style={td}>${b.totalCost}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+// ✅ STYLES
+const table = {
+  width: "100%",
+  borderCollapse: "collapse",
+};
+
+const thead = {
+  background: "#1D4ED8",
+  color: "white",
+};
+
+const th = {
+  padding: "10px",
+  textAlign: "left"
+};
+
+const td = {
+  padding: "10px",
+  borderBottom: "1px solid #ddd"
+};
+
+export default MyBookings;

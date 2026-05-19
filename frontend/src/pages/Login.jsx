@@ -12,8 +12,16 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axiosInstance.post('/api/auth/login', formData);
+      
+  //  store token (THIS FIXES AUTH)
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
+
+      //  update context
       login(response.data);
-      navigate('/tasks');
+
+      //  go to dashboard
+      navigate('/');
+
     } catch (error) {
       alert('Login failed. Please try again.');
     }

@@ -8,15 +8,41 @@ const createBooking = async (req, res) => {
 
         const unit = await StorageUnit.findById(unitId);
 
-        if (!unit || !unit.available) {
-            return res.status(400).json({ message: "Unit not available" });
+
+// ✅ Check if unit is already booked for selected dates
+const existingBooking = await Booking.findOne({
+    unitId,
+    status: "confirmed",
+    $or: [
+        {
+            startDate: { $lte: endDate },
+            endDate: { $gte: startDate }
         }
+    ]
+});
 
-        const days =
-            (new Date(endDate) - new Date(startDate)) /
-            (1000 * 60 * 60 * 24);
+if (existingBooking) {
+    return res.status(400).json({
+        message: "Unit already booked for selected dates"
+    });
+}
 
-        const totalCost = days * unit.pricePerDay;
+
+
+const start = new Date(startDate);
+const end = new Date(endDate);
+
+// ✅ Normalize time
+start.setHours(0, 0, 0, 0);
+end.setHours(0, 0, 0, 0);
+
+// ✅ Calculate days safely
+const diffTime = end - start;
+const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+// ✅ Calculate cost
+const totalCost = diffDays * unit.pricePerDay;
+
 
         const booking = new Booking({
             userId: req.user._id,
@@ -29,9 +55,6 @@ const createBooking = async (req, res) => {
 
         const savedBooking = await booking.save();
 
-        // ✅ mark unit unavailable
-        unit.available = false;
-        await unit.save();
 
         res.status(201).json(savedBooking);
 
@@ -87,12 +110,6 @@ const cancelBooking = async (req, res) => {
         booking.status = "cancelled";
         await booking.save();
 
-        // ✅ free the unit again
-        const unit = await StorageUnit.findById(booking.unitId);
-        if (unit) {
-            unit.available = true;
-            await unit.save();
-        }
 
         res.json({ message: "Booking cancelled" });
 

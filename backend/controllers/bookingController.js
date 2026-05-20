@@ -50,7 +50,7 @@ const totalCost = diffDays * unit.pricePerDay;
             startDate,
             endDate,
             totalCost,
-            status: "confirmed"
+            status: "pending"
         });
 
         const savedBooking = await booking.save();
@@ -118,9 +118,32 @@ const cancelBooking = async (req, res) => {
     }
 };
 
+/* pay for booking*/
+const payForBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    booking.status = "confirmed";
+    await booking.save();
+
+    res.json({ message: "Payment successful" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
 module.exports = {
     createBooking,
     getUserBookings,
     getAllBookings,
-    cancelBooking
+    cancelBooking,
+    payForBooking
 };

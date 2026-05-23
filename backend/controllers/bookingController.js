@@ -138,6 +138,54 @@ const payForBooking = async (req, res) => {
   }
 };
 
+/* update booking*/
+const updateBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // ✅ auth check
+    if (
+      booking.userId.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // ✅ update fields
+    if (req.body.unitId) booking.unitId = req.body.unitId;
+    if (req.body.startDate) booking.startDate = req.body.startDate;
+    if (req.body.endDate) booking.endDate = req.body.endDate;
+
+    // ✅ IMPORTANT: use updated unit
+    const unit = await StorageUnit.findById(booking.unitId);
+
+    // ✅ recalc cost
+    const start = new Date(booking.startDate);
+    const end = new Date(booking.endDate);
+
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
+    const diffTime = end - start;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+    booking.totalCost = diffDays * unit.pricePerDay;
+
+    await booking.save();
+
+    res.json(booking);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 
 module.exports = {
@@ -145,5 +193,6 @@ module.exports = {
     getUserBookings,
     getAllBookings,
     cancelBooking,
-    payForBooking
+    payForBooking,
+    updateBooking
 };

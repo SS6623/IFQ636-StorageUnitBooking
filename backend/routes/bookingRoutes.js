@@ -1,3 +1,4 @@
+console.log("🔥 bookingRoutes file loaded");
 const express = require("express");
 const router = express.Router();
 
@@ -6,10 +7,14 @@ const {
     getUserBookings,
     getAllBookings,
     cancelBooking
+
 } = require("../controllers/bookingController");
 
 const { protect, admin } = require("../middleware/authMiddleware");
 const { payForBooking } = require("../controllers/bookingController");
+const { updateBooking } = require("../controllers/bookingController");
+
+console.log("🔥 bookingRoutes file loaded");
 
 /*  USER: Create booking */
 router.post("/", protect, createBooking);
@@ -25,5 +30,9 @@ router.put("/cancel/:id", protect, cancelBooking);
 
 /*pay for booking*/
 router.put("/pay/:id", protect, payForBooking);
+
+
+/*updadte booking*/
+router.put("/update/:id", protect, updateBooking);
 
 module.exports = router;

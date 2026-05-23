@@ -6,7 +6,17 @@ export default function AdminDashboard() {
   const [units, setUnits] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  // ✅ Update modal
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
   const [form, setForm] = useState({
+    name: "",
+    size: "",
+    pricePerDay: ""
+  });
+
+  const [updateForm, setUpdateForm] = useState({
     name: "",
     size: "",
     pricePerDay: ""
@@ -36,14 +46,11 @@ export default function AdminDashboard() {
         "http://localhost:5001/api/units",
         form,
         {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 
       alert("✅ Unit created");
-
       setForm({ name: "", size: "", pricePerDay: "" });
       setShowModal(false);
       fetchUnits();
@@ -53,7 +60,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // ✅ Delete
+  // ✅ Delete unit
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this unit?")) return;
 
@@ -61,16 +68,14 @@ export default function AdminDashboard() {
       await axios.delete(
         `http://localhost:5001/api/units/${id}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 
       alert("✅ Unit deleted");
       setUnits(units.filter(u => u._id !== id));
 
-    } catch (error) {
+    } catch {
       alert("Delete failed");
     }
   };
@@ -79,11 +84,8 @@ export default function AdminDashboard() {
     <div style={{ padding: "30px", background: "#F3F4F6", minHeight: "100vh" }}>
       <h2>Admin Dashboard</h2>
 
-      {/* ✅ BUTTON */}
-      <button
-        style={createBtn}
-        onClick={() => setShowModal(true)}
-      >
+      {/* ✅ CREATE BUTTON */}
+      <button style={createBtn} onClick={() => setShowModal(true)}>
         + Create Unit
       </button>
 
@@ -95,32 +97,56 @@ export default function AdminDashboard() {
       {units.map((unit) => (
         <div key={unit._id} style={card}>
           <h3>{unit.name}</h3>
-          <p><b>Size:</b> {unit.size}</p>
-          <p><b>Price:</b> ${unit.pricePerDay}</p>
+          <p><strong>Size:</strong> {unit.size}</p>
+          <p><strong>Price:</strong> ${unit.pricePerDay}</p>
           <p>{unit.available ? "✅ Available" : "❌ Booked"}</p>
 
-          <button style={deleteBtn} onClick={() => handleDelete(unit._id)}>
+          {/* ✅ UPDATE BUTTON */}
+          <button
+            style={updateBtn}
+            onClick={() => {
+              setSelectedUnit(unit);
+              setUpdateForm({
+                name: unit.name,
+                size: unit.size,
+                pricePerDay: unit.pricePerDay
+              });
+              setShowUpdateModal(true);
+            }}
+          >
+            Update
+          </button>
+
+          {/* ✅ DELETE BUTTON */}
+          <button
+            style={deleteBtn}
+            onClick={() => handleDelete(unit._id)}
+          >
             Delete
           </button>
         </div>
       ))}
 
-      {/* ✅ MODAL */}
+      {/* ✅ CREATE MODAL */}
       {showModal && (
         <div style={overlay}>
           <div style={modal}>
             <h3>Create New Storage Unit</h3>
 
             <input
-              placeholder="Unit Name"
+              placeholder="Name"
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
               style={input}
             />
 
             <select
               value={form.size}
-              onChange={(e) => setForm({ ...form, size: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, size: e.target.value })
+              }
               style={input}
             >
               <option value="">Select Size</option>
@@ -133,7 +159,9 @@ export default function AdminDashboard() {
               type="number"
               placeholder="Price per day"
               value={form.pricePerDay}
-              onChange={(e) => setForm({ ...form, pricePerDay: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, pricePerDay: e.target.value })
+              }
               style={input}
             />
 
@@ -147,9 +175,78 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* ✅ UPDATE MODAL */}
+      {showUpdateModal && selectedUnit && (
+        <div style={overlay}>
+          <div style={modal}>
+            <h3>Update Unit</h3>
+
+            <input
+              value={updateForm.name}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, name: e.target.value })
+              }
+              style={input}
+            />
+
+            <input
+              value={updateForm.size}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, size: e.target.value })
+              }
+              style={input}
+            />
+
+            <input
+              type="number"
+              value={updateForm.pricePerDay}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, pricePerDay: e.target.value })
+              }
+              style={input}
+            />
+
+            <button
+              style={primaryBtn}
+              onClick={async () => {
+                try {
+                  await axios.put(
+                    `http://localhost:5001/api/units/${selectedUnit._id}`,
+                    updateForm,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`
+                      }
+                    }
+                  );
+
+                  alert("✅ Unit updated");
+                  setShowUpdateModal(false);
+                  fetchUnits();
+
+                } catch {
+                  alert("Update failed");
+                }
+              }}
+            >
+              Save Changes
+            </button>
+
+            <button
+              style={cancelBtn}
+              onClick={() => setShowUpdateModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+/* ✅ STYLES */
 
 const createBtn = {
   background: "#2563EB",
@@ -160,13 +257,23 @@ const createBtn = {
   marginBottom: "20px"
 };
 
+const updateBtn = {
+  background: "#F59E0B",
+  color: "white",
+  padding: "8px",
+  border: "none",
+  borderRadius: "5px",
+  marginRight: "10px",
+  cursor: "pointer"
+};
+
 const deleteBtn = {
-  marginTop: "10px",
   background: "#EF4444",
   color: "white",
   padding: "8px",
   border: "none",
-  borderRadius: "5px"
+  borderRadius: "5px",
+  cursor: "pointer"
 };
 
 const card = {

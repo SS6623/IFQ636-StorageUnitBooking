@@ -4,7 +4,7 @@
   "description": "Backend for Task Manager App",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha tests/*.test.js",
     "start": "node server.js",
     "dev": "nodemon server.js",
     "prod": "node server.js"
@@ -26,6 +26,7 @@
     "nodemon": "^2.0.15",
     "sinon": "^19.0.2"
   },
+  
   "author": "Task Manager Team",
   "license": "ISC"
 }

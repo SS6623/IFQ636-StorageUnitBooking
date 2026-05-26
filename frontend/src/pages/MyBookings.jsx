@@ -10,14 +10,6 @@ const MyBookings = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showPayModal, setShowPayModal] = useState(false);
   
-return (
-  <>
-    <button onClick={() => setShowPayModal(true)}>Pay</button>
-    {showPayModal && <Modal />}
-  </>
-);
-
-  
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const [paymentForm, setPaymentForm] = useState({
@@ -252,6 +244,23 @@ return (
           </div>
         </div>
       )}
+
+      
+{/* ✅ PAY MODAL */}
+{showPayModal && (
+  <div style={overlay}>
+    <div style={modal}>
+      <h3>Payment</h3>
+
+      <p>Enter payment details here</p>
+
+      <button onClick={() => setShowPayModal(false)}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

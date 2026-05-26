@@ -9,6 +9,14 @@ const MyBookings = () => {
 
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showPayModal, setShowPayModal] = useState(false);
+  
+return (
+  <>
+    <button onClick={() => setShowPayModal(true)}>Pay</button>
+    {showPayModal && <Modal />}
+  </>
+);
+
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const [paymentForm, setPaymentForm] = useState({

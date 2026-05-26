@@ -8,15 +8,15 @@ const MyBookings = () => {
   const [sortBy, setSortBy] = useState("date");
 
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [showPayModal, setShowPayModal] = useState(false);
+  //const [showPayModal, setShowPayModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
-  const [paymentForm, setPaymentForm] = useState({
+  /*const [paymentForm, setPaymentForm] = useState({
     name: "",
     cardNumber: "",
     expiry: "",
     cvv: ""
-  });
+  });*/
 
   const [updateForm, setUpdateForm] = useState({
     unitId: "",

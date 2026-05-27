@@ -137,3 +137,110 @@ describe("Booking Controller Tests", () => {
   });
 
 });
+
+//admin creates a unit
+const { createUnit } = require("../controllers/storageUnitController");
+
+it("should allow admin to create a storage unit", async () => {
+
+  const req = {
+    user: { role: "admin" },
+    body: {
+      name: "Unit A",
+      pricePerDay: 50
+    }
+  };
+
+  const res = {
+    status: sinon.stub().returnsThis(),
+    json: sinon.spy()
+  };
+
+  sinon.stub(StorageUnit.prototype, "save").resolves(req.body);
+
+  await createUnit(req, res);
+
+  expect(res.status.calledWith(201)).to.be.true;
+});
+
+//admin deletes a unit
+const { deleteUnit } = require("../controllers/storageUnitController");
+
+it("should allow admin to delete a unit", async () => {
+
+  const unit = {
+    remove: sinon.stub().resolves()
+  };
+
+  sinon.stub(StorageUnit, "findById").resolves(unit);
+
+  const req = {
+    params: { id: new mongoose.Types.ObjectId() },
+    user: { role: "admin" }
+  };
+
+  const res = {
+    json: sinon.spy(),
+    status: sinon.stub().returnsThis()
+  };
+
+  await deleteUnit(req, res);
+
+  expect(res.status.called).to.be.true;
+});
+
+//admin updates unit
+const { updateUnit } = require("../controllers/storageUnitController");
+
+it("should allow admin to update a unit", async () => {
+
+  const unit = {
+    name: "Old Unit",
+    pricePerDay: 10,
+    save: sinon.stub().resolves()
+  };
+
+  sinon.stub(StorageUnit, "findById").resolves(unit);
+
+  const req = {
+    params: { id: new mongoose.Types.ObjectId() },
+    user: { role: "admin" },
+    body: {
+      name: "Updated Unit",
+      pricePerDay: 20
+    }
+  };
+
+  const res = {
+    json: sinon.spy(),
+    status: sinon.stub().returnsThis()
+  };
+
+  await updateUnit(req, res);
+
+  expect(unit.name).to.equal("Updated Unit");
+  expect(unit.pricePerDay).to.equal(20);
+});
+
+//admin views all bookings
+const { getAllBookings } = require("../controllers/bookingController");
+
+it("should allow admin to view all bookings", async () => {
+
+  const fakeBookings = [{}, {}, {}];
+
+  sinon.stub(Booking, "find").resolves(fakeBookings);
+
+  const req = {
+    user: { role: "admin" }
+  };
+
+  const res = {
+    json: sinon.spy(),
+    status: sinon.stub().returnsThis()
+  };
+
+  await getAllBookings(req, res);
+
+  expect(res.json.calledWith(fakeBookings)).to.be.true;
+});

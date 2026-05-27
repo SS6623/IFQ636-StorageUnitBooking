@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -33,7 +34,7 @@ const MyBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       const { data } = await axios.get(
-        "http://localhost:5001/api/bookings/my",
+        `${API_URL}/api/bookings/my`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setBookings(data);
@@ -45,7 +46,7 @@ const MyBookings = () => {
   // ✅ FETCH UNITS
   useEffect(() => {
     const fetchUnits = async () => {
-      const { data } = await axios.get("http://localhost:5001/api/units");
+      const { data } = await axios.get(`${API_URL}/api/units`);
       setUnits(data);
     };
     fetchUnits();
@@ -162,7 +163,7 @@ const MyBookings = () => {
                     if (!window.confirm("Cancel booking?")) return;
 
                     await axios.put(
-                      `http://localhost:5001/api/bookings/cancel/${b._id}`,
+                      `${API_URL}/api/bookings/cancel/${b._id}`,
                       {},
                       { headers: { Authorization: `Bearer ${token}` } }
                     );
@@ -229,7 +230,7 @@ const MyBookings = () => {
 
             <button style={primaryBtn} onClick={async () => {
               await axios.put(
-                `http://localhost:5001/api/bookings/update/${selectedBooking._id}`,
+                `${API_URL}/api/bookings/update/${selectedBooking._id}`,
                 updateForm,
                 { headers: { Authorization: `Bearer ${token}` } }
               );

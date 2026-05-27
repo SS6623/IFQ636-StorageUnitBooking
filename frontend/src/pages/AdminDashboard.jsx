@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../config";
 
 export default function AdminDashboard() {
   const [units, setUnits] = useState([]);
@@ -28,7 +29,7 @@ export default function AdminDashboard() {
   // ✅ Fetch units
   const fetchUnits = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5001/api/units");
+      const { data } = await axios.get(`${API_URL}/api/units`);
       setUnits(data);
     } catch (error) {
       console.error(error);
@@ -43,7 +44,7 @@ export default function AdminDashboard() {
   const handleCreate = async () => {
     try {
       await axios.post(
-        "http://localhost:5001/api/units",
+        `${API_URL}/api/units`,
         form,
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -66,7 +67,7 @@ export default function AdminDashboard() {
 
     try {
       await axios.delete(
-        `http://localhost:5001/api/units/${id}`,
+        `${API_URL}/api/units/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -212,7 +213,7 @@ export default function AdminDashboard() {
               onClick={async () => {
                 try {
                   await axios.put(
-                    `http://localhost:5001/api/units/${selectedUnit._id}`,
+                    `${API_URL}/api/units/${selectedUnit._id}`,
                     updateForm,
                     {
                       headers: {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 export default function Dashboard() {
   const [units, setUnits] = useState([]);
@@ -18,7 +19,7 @@ export default function Dashboard() {
     const fetchUnits = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5001/api/units"
+          `${API_URL}/api/units`
         );
         setUnits(data);
       } catch (error) {
@@ -50,7 +51,7 @@ export default function Dashboard() {
   const handleConfirmBooking = async () => {
     try {
       await axios.post(
-        "http://localhost:5001/api/bookings",
+        `${API_URL}/api/bookings`,
         {
           unitId: selectedUnit._id,
           startDate,

@@ -1,3 +1,152 @@
+ Storage Unit Booking System
+A full-stack web application that allows users to book storage units and administrators to manage units and bookings. The application is deployed on AWS EC2 with CI/CD using GitHub Actions.
+
+Features
+User Features
+
+  Register and login using JWT authentication
+  View available storage units
+  Create bookings
+  Update bookings
+  Cancel bookings
+  Make payments for bookings
+
+
+Admin Features
+
+  Create storage units
+  Update storage units
+  Delete storage units
+  View all bookings
+
+Tech Stack:
+Frontend
+
+  React
+  Axios
+  Yarn
+
+Backend
+
+  Node.js
+  Express.js
+  MongoDB (Mongoose)
+
+DevOps
+
+  AWS EC2 (deployment)
+  GitHub Actions (CI/CD)
+  PM2 (process management)
+
+  Project Structure
+StorageUnitBooking/
+│
+├── frontend/        # React application
+├── backend/         # Node.js API
+├── .github/
+│   └── workflows/   # CI/CD pipeline
+└── README.md
+
+Setup Instructions
+1.Clone the repository
+git clone https://github.com/SS6623/IFQ636-StorageUnitBooking.git
+2.cd IFQ636-StorageUnitBooking
+3.cd IFQ636-StorageUnitBooking
+
+Backend setup
+cd backend
+npm install
+
+Create .env file:
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+PORT=5001
+
+Run backend:
+npm start
+
+Frontend setup
+
+cd frontend
+yarn install
+
+Update API URL (src/config.js):
+export const API_URL = "http://<ec2-public-ip>:5001"
+
+yarn start
+
+Running Tests
+
+cd backend
+npm test
+✅ Uses:
+
+Mocha
+Chai
+Sinon
+
+CI/CD Pipeline
+
+GitHub Actions automatically:
+
+  Installs dependencies
+  Runs tests
+  Builds frontend
+  Deploys to EC2 via self-hosted runner
+
+Workflow triggers:
+
+  Push to main branch
+
+Deployment (AWS EC2)
+
+  Application hosted on EC2 instance
+  PM2 used for process management
+
+Start services:
+pm2 start npm --name backend -- start
+pm2 start npm --name frontend -- start
+
+Save processes:
+
+pm2 save
+pm2 startup
+
+In the EC2 instance, add Custom / MY IP / Port 5001 to the security group to ensure traffic is allowed from the local machine. 
+
+Access the Application
+http://<EC2-PUBLIC-IP>:3000
+Backend API:
+http://<EC2-PUBLIC-IP>:5001
+
+
+Security Notes
+
+  Environment variables used for secrets
+  Security groups restrict access to required ports, so specific local IP addresses need to be added before accessing the application
+
+Tests Covered
+1.Booking Flow
+
+  Create booking
+  Update booking
+  Make payment
+  Cancel booking
+  View booking
+
+2.Admin Features
+
+  Create storage unit
+  Update storage unit
+  Delete storage unit
+  View all bookings
+
+Author
+Sweta Shah
+
+License
+This project is for academic purposes.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

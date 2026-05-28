@@ -79,11 +79,11 @@ Running Tests
 
 cd backend
 npm test
-✅ Uses:
+Uses:
 
-Mocha
-Chai
-Sinon
+  Mocha
+  Chai
+  Sinon
 
 CI/CD Pipeline
 
@@ -112,12 +112,24 @@ Save processes:
 pm2 save
 pm2 startup
 
-In the EC2 instance, add Custom / MY IP / Port 5001 to the security group to ensure traffic is allowed from the local machine. 
 
-Access the Application
-http://<EC2-PUBLIC-IP>:3000
-Backend API:
+
+In the EC2 instance, add the following rules to the security group:
+Custom / MY IP / Port 5001 to the security group to ensure traffic is allowed from the local machine. 
+Custom / MY IP / Port 3000 to the security group to ensure traffic is allowed from the local machine. 
+SSH / MY IP to the security group to ensure traffic is allowed from the local machine. 
+
+Access the Application in the browser by typing: http://<EC2-PUBLIC-IP>:3000
+
+Backend API can be accessed using:
 http://<EC2-PUBLIC-IP>:5001
+--> This will show a message saying API is running
+After changing the IP, run the following commands in the AWS CLI:
+
+cd frontend
+yarn build
+pm2 restart all
+
 
 
 Security Notes
@@ -132,7 +144,6 @@ Tests Covered
   Update booking
   Make payment
   Cancel booking
-  View booking
 
 2.Admin Features
 

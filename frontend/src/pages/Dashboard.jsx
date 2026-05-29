@@ -55,7 +55,7 @@ console.log(process.env.REACT_APP_API_URL)
     try {
       //await axios.post(
         //`${API_URL}/api/bookings`,
-        await api.post("/api/bookings"),
+        await api.post("/api/bookings",
         {
           unitId: selectedUnit._id,
           startDate,

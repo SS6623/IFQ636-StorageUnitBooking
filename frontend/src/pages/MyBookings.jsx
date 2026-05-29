@@ -241,15 +241,104 @@ const MyBookings = () => {
 
       
 {/* ✅ PAY MODAL */}
-{showPayModal && (
+{showPayModal && selectedBooking && (
   <div style={overlay}>
     <div style={modal}>
-      <h3>Payment</h3>
+      <h3>Payment Details</h3>
 
-      <p>Enter payment details here</p>
+      <p><strong>Unit:</strong> {selectedBooking.unitId?.name}</p>
+      <p><strong>Total:</strong> ${selectedBooking.totalCost}</p>
 
-      <button onClick={() => setShowPayModal(false)}>
-        Close
+      {/* ✅ CARD FORM */}
+      <input
+        placeholder="Name on Card"
+        value={paymentForm.name}
+        onChange={(e) =>
+          setPaymentForm({ ...paymentForm, name: e.target.value })
+        }
+        style={input}
+      />
+
+      <input
+        placeholder="Card Number"
+        value={paymentForm.cardNumber}
+        onChange={(e) =>
+          setPaymentForm({ ...paymentForm, cardNumber: e.target.value })
+        }
+        style={input}
+      />
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          placeholder="MM/YY"
+          value={paymentForm.expiry}
+          onChange={(e) =>
+            setPaymentForm({ ...paymentForm, expiry: e.target.value })
+          }
+          style={input}
+        />
+
+        <input
+          placeholder="CVV"
+          value={paymentForm.cvv}
+          onChange={(e) =>
+            setPaymentForm({ ...paymentForm, cvv: e.target.value })
+          }
+          style={input}
+        />
+      </div>
+
+      {/* ✅ CONFIRM BUTTON */}
+      <button
+        style={payBtn}
+        onClick={async () => {
+          // ✅ Simple validation (frontend only)
+          if (
+            !paymentForm.name ||
+            !paymentForm.cardNumber ||
+            !paymentForm.expiry ||
+            !paymentForm.cvv
+          ) {
+            alert("Please fill all payment fields");
+            return;
+          }
+
+          try {
+            await api.put(
+              `/api/bookings/pay/${selectedBooking._id}`,
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+
+            alert("✅ Payment successful! Your storage unit is booked!");
+
+            setShowPayModal(false);
+            setSelectedBooking(null);
+
+            // ✅ Clear form
+            setPaymentForm({
+              name: "",
+              cardNumber: "",
+              expiry: "",
+              cvv: ""
+            });
+
+            window.location.reload();
+
+          } catch (error) {
+            alert("Payment failed");
+          }
+        }}
+      >
+        Pay Now
+      </button>
+
+      <button style={cancelBtn} onClick={() => setShowPayModal(false)}>
+        Cancel
       </button>
     </div>
   </div>
@@ -258,6 +347,7 @@ const MyBookings = () => {
     </div>
   );
 };
+
 
 /* ✅ STYLES */
 

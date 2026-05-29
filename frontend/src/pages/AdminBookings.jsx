@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-const API_URL = "http://54.79.136.187:5001";
+//const API_URL = "http://54.79.136.187:5001";
 //import { API_URL } from "../config";
+import api from "../axiosConfig";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -15,8 +16,8 @@ const AdminBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const { data } = await axios.get(
-          `${API_URL}/api/bookings`,
+        const { data } = await api.get(
+          "/api/bookings",
           {
             headers: {
               Authorization: `Bearer ${token}`

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-const API_URL = "http://54.79.136.187:5001";
+//const API_URL = "http://54.79.136.187:5001";
 //import { API_URL } from "../config";
+import api from "../axiosConfig";
 
 export default function AdminDashboard() {
   const [units, setUnits] = useState([]);
@@ -30,7 +31,7 @@ export default function AdminDashboard() {
   // ✅ Fetch units
   const fetchUnits = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/api/units`);
+      const { data } = await api.get("/api/units");
       setUnits(data);
     } catch (error) {
       console.error(error);
@@ -44,8 +45,8 @@ export default function AdminDashboard() {
   // ✅ Create unit
   const handleCreate = async () => {
     try {
-      await axios.post(
-        `${API_URL}/api/units`,
+      await api.post(
+        "/api/units",
         form,
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -67,8 +68,8 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this unit?")) return;
 
     try {
-      await axios.delete(
-        `${API_URL}/api/units/${id}`,
+      await api.delete(
+        `/api/units/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -213,8 +214,8 @@ export default function AdminDashboard() {
               style={primaryBtn}
               onClick={async () => {
                 try {
-                  await axios.put(
-                    `${API_URL}/api/units/${selectedUnit._id}`,
+                  await api.put(
+                    `/api/units/${selectedUnit._id}`,
                     updateForm,
                     {
                       headers: {

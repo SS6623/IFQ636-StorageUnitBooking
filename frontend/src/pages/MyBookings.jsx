@@ -11,7 +11,12 @@ const MyBookings = () => {
   const [showPayModal, setShowPayModal] = useState(false);
   
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-
+  const [paymentForm, setPaymentForm] = useState({
+  name: "",
+  cardNumber: "",
+  expiry: "",
+  cvv: ""
+});
 
   const [updateForm, setUpdateForm] = useState({
     unitId: "",

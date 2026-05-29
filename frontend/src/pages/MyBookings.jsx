@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 //const API_URL = "http://54.79.136.187:5001";
 //import { API_URL } from "../config";
 import api from "../axiosConfig";

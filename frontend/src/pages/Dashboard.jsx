@@ -14,7 +14,7 @@ export default function Dashboard() {
   // ✅ Get token
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const token = userInfo?.token;
-
+console.log(process.env.REACT_APP_API_URL)
   // ✅ Fetch units
   useEffect(() => {
     const fetchUnits = async () => {

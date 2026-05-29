@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-//import axios from "axios";
-//const API_URL = "http://54.79.136.187:5001";
-//import { API_URL } from "../config";
 import api from "../axiosConfig";
 
 export default function Dashboard() {
@@ -15,13 +12,12 @@ export default function Dashboard() {
   // ✅ Get token
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const token = userInfo?.token;
-console.log(process.env.REACT_APP_API_URL)
+
   // ✅ Fetch units
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        //const { data } = await api.get(
-          //`${API_URL}/api/units`
+
           const { data } = await api.get("/api/units"
         );
         setUnits(data);
@@ -53,8 +49,7 @@ console.log(process.env.REACT_APP_API_URL)
   // ✅ Confirm booking
   const handleConfirmBooking = async () => {
     try {
-      //await axios.post(
-        //`${API_URL}/api/bookings`,
+
         await api.post("/api/bookings",
         {
           unitId: selectedUnit._id,

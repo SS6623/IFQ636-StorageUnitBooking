@@ -48,19 +48,19 @@ StorageUnitBooking/
 └── README.md
 
 Setup Instructions
-1.Clone the repository
-git clone https://github.com/SS6623/IFQ636-StorageUnitBooking.git
-2.cd IFQ636-StorageUnitBooking
-3.cd IFQ636-StorageUnitBooking
+  1.Clone the repository
+  git clone https://github.com/SS6623/IFQ636-StorageUnitBooking.git
+  2.cd IFQ636-StorageUnitBooking
+  3.cd IFQ636-StorageUnitBooking
 
 Backend setup
-cd backend
-npm install
+  cd backend
+  npm install
 
 Create .env file:
-MONGO_URI=your_mongodb_connection
-JWT_SECRET=your_secret_key
-PORT=5001
+  MONGO_URI=your_mongodb_connection
+  JWT_SECRET=your_secret_key
+  PORT=5001
 
 Run backend:
 npm start
@@ -70,8 +70,8 @@ Frontend setup
 cd frontend
 yarn install
 
-Update API URL (src/config.js):
-export const API_URL = "http://<ec2-public-ip>:5001"
+Update base URL in (src/pages/axiosConfig.jsx):
+baseURL: "http://54.79.136.187:5001" --> The ip here should be updated with EC2 instance public IP
 
 yarn start
 
@@ -79,11 +79,7 @@ Running Tests
 
 cd backend
 npm test
-Uses:
-
-  Mocha
-  Chai
-  Sinon
+**Uses: Mocha, Chai, Sinon
 
 CI/CD Pipeline
 

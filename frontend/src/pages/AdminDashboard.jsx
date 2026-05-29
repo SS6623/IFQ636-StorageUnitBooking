@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-//import axios from "axios";
+
 import { useAuth } from "../context/AuthContext";
-//const API_URL = "http://54.79.136.187:5001";
-//import { API_URL } from "../config";
+
 import api from "../axiosConfig";
 
 export default function AdminDashboard() {

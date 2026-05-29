@@ -9,6 +9,7 @@ const {
 } = require("../controllers/storageUnitController");
 
 const { protect, admin } = require("../middleware/authMiddleware");
+const { updateUnit } = require("../controllers/storageUnitController");
 
 //  Get all units (public)
 router.get("/", getUnits);

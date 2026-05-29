@@ -4,7 +4,8 @@ import axios from 'axios';
 
 const api = axios.create({
   //baseURL: `${API_URL}`,
-  baseURL: process.env.REACT_APP_API_URL,
+  //baseURL: process.env.REACT_APP_API_URL,
+  baseURL: "http://54.79.136.187:5001",
   headers: { 'Content-Type': 'application/json' },
 });
 
